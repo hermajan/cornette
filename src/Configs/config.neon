@@ -1,0 +1,6 @@
+includes:
+	- router.neon
+
+nettrine.orm.annotations:
+	mapping:
+		Cornette: %appDir%/../vendor/hermajan/cornette

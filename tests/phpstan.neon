@@ -1,0 +1,7 @@
+parameters:
+	level: max
+	scanDirectories:
+		- %currentWorkingDirectory%/src/
+
+	checkMissingIterableValueType: false
+	checkGenericClassInNonGenericObjectType: false
