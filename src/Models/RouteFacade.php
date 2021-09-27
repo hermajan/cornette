@@ -1,11 +1,13 @@
 <?php
 namespace Cornette\Models;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\{EntityRepository, NonUniqueResultException, NoResultException};
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
+use Tracy\Debugger;
 
 class RouteFacade {
 	/** @var EntityManagerDecorator */
@@ -47,7 +49,7 @@ class RouteFacade {
 		}
 	}
 	
-	public function insertSlug(?string $presenter, string $action, array $parameters, string $slug, string $locale): void {
+	public function insertRoute(?string $presenter, string $action, array $parameters, string $slug, string $locale): ?RouteAddress {
 		if(!isset($presenter)) {
 			throw new InvalidArgumentException("Presenter must have name!");
 		}
@@ -81,9 +83,15 @@ class RouteFacade {
 				->setParameters($parameters)
 				->setAdded(new \DateTime());
 			
-			$this->entityManager->persist($routeAddress);
-			$this->entityManager->flush($routeAddress);
+			try {
+				$this->entityManager->persist($routeAddress);
+				$this->entityManager->flush($routeAddress);
+			} catch(UniqueConstraintViolationException $e) {
+				return null;
+			}
 		}
+		
+		return $routeAddress;
 	}
 	
 	public function getBySlug(string $slug, ?string $locale = null, ?array $parameters = null): ?RouteAddress {

@@ -22,7 +22,7 @@ class SlugControl extends Control {
 		/** @var Presenter|null $presenter */
 		$presenter = $this->getPresenter();
 		if(isset($presenter)) {
-			$this->routeFacade->insertSlug($presenter->getName(), $presenter->getAction(), $presenter->getParameters(), $slug, $this->translator->getLocale());
+			$this->routeFacade->insertRoute($presenter->getName(), $presenter->getAction(), $presenter->getParameters(), $slug, $this->translator->getLocale());
 		}
 	}
 }
