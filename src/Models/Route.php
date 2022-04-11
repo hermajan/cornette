@@ -12,30 +12,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Route {
 	/**
-	 * @var int
 	 * @ORM\Column(name="id", type="integer", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
-	private $id;
+	private int $id;
 	
 	/**
-	 * @var string
 	 * @ORM\Column(name="presenter", type="string", length=191, nullable=false)
 	 */
-	private $presenter;
+	private string $presenter;
 	
 	/**
-	 * @var string
 	 * @ORM\Column(name="action", type="string", length=191, nullable=false)
 	 */
-	private $action;
+	private string $action;
 	
 	/**
-	 * @var Collection
 	 * @ORM\OneToMany(targetEntity="RouteAddress", mappedBy="route", fetch="EAGER")
 	 * */
-	protected $addresses;
+	protected Collection|ArrayCollection $addresses;
 	
 	public function __construct() {
 		$this->addresses = new ArrayCollection();

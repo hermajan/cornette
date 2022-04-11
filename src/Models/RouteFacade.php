@@ -3,21 +3,21 @@ namespace Cornette\Models;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Persistence\ObjectRepository;
 use Doctrine\ORM\{EntityRepository, NonUniqueResultException, NoResultException};
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
-use Tracy\Debugger;
 
 class RouteFacade {
 	/** @var EntityManagerDecorator */
-	protected $entityManager;
+	protected EntityManagerDecorator $entityManager;
 	
 	/** @var EntityRepository */
-	protected $repository;
+	protected ObjectRepository|Route|EntityRepository $repository;
 	
 	/** @var EntityRepository */
-	protected $repositoryAddress;
+	protected ObjectRepository|RouteAddress|EntityRepository $repositoryAddress;
 	
 	public function __construct(EntityManagerDecorator $entityManager) {
 		$this->entityManager = $entityManager;
@@ -44,7 +44,7 @@ class RouteFacade {
 		
 		try {
 			return $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
-		} catch(NoResultException | NonUniqueResultException $e) {
+		} catch(NoResultException|NonUniqueResultException $e) {
 			return null;
 		}
 	}
@@ -108,7 +108,7 @@ class RouteFacade {
 		
 		try {
 			return $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
-		} catch(NoResultException | NonUniqueResultException $e) {
+		} catch(NoResultException|NonUniqueResultException $e) {
 			return null;
 		}
 	}
@@ -116,7 +116,7 @@ class RouteFacade {
 	/**
 	 * @return Route|object|null
 	 */
-	public function getRoute(string $presenter, string $action) {
+	public function getRoute(string $presenter, string $action): ?Route {
 		return $this->repository->findOneBy(["presenter" => $presenter, "action" => $action]);
 	}
 }

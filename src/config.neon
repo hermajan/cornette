@@ -1,0 +1,8 @@
+nettrine.orm.annotations:
+	mapping:
+		Cornette: %appDir%/../vendor/hermajan/cornette
+
+services:
+	routeFacade: Cornette\Models\RouteFacade
+	routerService: Cornette\Routers\RouterService
+	slugControl: Cornette\Components\SlugControl

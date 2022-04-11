@@ -3,15 +3,12 @@ namespace Cornette\Components;
 
 use Contributte\Translation\Translator;
 use Cornette\Models\RouteFacade;
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Presenter;
+use Nette\Application\UI\{Control, Presenter};
 
 class SlugControl extends Control {
-	/** @var RouteFacade */
-	private $routeFacade;
+	private RouteFacade $routeFacade;
 	
-	/** @var Translator */
-	private $translator;
+	private Translator $translator;
 	
 	public function __construct(RouteFacade $routeFacade, Translator $translator) {
 		$this->routeFacade = $routeFacade;
