@@ -1,28 +1,39 @@
 <?php
+
 namespace Cornette\Models;
 
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\Persistence\ObjectRepository;
-use Doctrine\ORM\{EntityRepository, NonUniqueResultException, NoResultException};
+use Doctrine\ORM\{Decorator\EntityManagerDecorator, EntityRepository, NonUniqueResultException, NoResultException};
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
-use Nettrine\ORM\EntityManagerDecorator;
 
 class RouteFacade {
 	/** @var EntityManagerDecorator */
-	protected EntityManagerDecorator $entityManager;
+	protected $entityManager;
 	
-	/** @var EntityRepository */
-	protected ObjectRepository|Route|EntityRepository $repository;
+	/** @var EntityRepository<Route> */
+	protected $repository;
 	
-	/** @var EntityRepository */
-	protected ObjectRepository|RouteAddress|EntityRepository $repositoryAddress;
+	/** @var EntityRepository<RouteAddress> */
+	protected $repositoryAddress;
 	
 	public function __construct(EntityManagerDecorator $entityManager) {
 		$this->entityManager = $entityManager;
 		$this->repository = $entityManager->getRepository(Route::class);
 		$this->repositoryAddress = $entityManager->getRepository(RouteAddress::class);
+	}
+	
+	public function getParametersKey(): string {
+		$parametersKey = ":parameters";
+		try {
+			if($this->entityManager->getConnection()->getDatabasePlatform()->hasNativeJsonType()) {
+				$parametersKey = "cast(:parameters as json)";
+			}
+		} catch(DBALException $e) {
+		}
+		return $parametersKey;
 	}
 	
 	public function getByParameters(array $parameters): ?RouteAddress {
@@ -39,7 +50,7 @@ class RouteFacade {
 		
 		unset($parameters["presenter"], $parameters["action"]);
 		if(!empty($parameters)) {
-			$queryBuilder->andWhere("ra.parameters = cast(:parameters as json)")->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
+			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
 		}
 		
 		try {
@@ -103,7 +114,7 @@ class RouteFacade {
 		}
 		
 		if(!empty($parameters)) {
-			$queryBuilder->andWhere("ra.parameters = cast(:parameters as json)")->setParameter("parameters", $parameters, Types::JSON);
+			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", $parameters, Types::JSON);
 		}
 		
 		try {
@@ -116,7 +127,7 @@ class RouteFacade {
 	/**
 	 * @return Route|object|null
 	 */
-	public function getRoute(string $presenter, string $action): ?Route {
+	public function getRoute(string $presenter, string $action) {
 		return $this->repository->findOneBy(["presenter" => $presenter, "action" => $action]);
 	}
 }

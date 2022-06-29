@@ -6,9 +6,11 @@ use Contributte\Translation\Translator;
 use Cornette\Models\RouteFacade;
 
 class RouterService {
-	public RouteFacade $routeFacade;
+	/** @var RouteFacade */
+	public $routeFacade;
 	
-	public Translator $translator;
+	/** @var Translator */
+	public $translator;
 	
 	public function __construct(RouteFacade $routeFacade, Translator $translator) {
 		$this->routeFacade = $routeFacade;

@@ -6,9 +6,11 @@ use Cornette\Models\RouteFacade;
 use Nette\Application\UI\{Control, Presenter};
 
 class SlugControl extends Control {
-	private RouteFacade $routeFacade;
+	/** @var RouteFacade */
+	private $routeFacade;
 	
-	private Translator $translator;
+	/** @var Translator */
+	private $translator;
 	
 	public function __construct(RouteFacade $routeFacade, Translator $translator) {
 		$this->routeFacade = $routeFacade;

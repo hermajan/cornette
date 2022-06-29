@@ -7,7 +7,8 @@ use Nette\Http\{IRequest, Url, UrlScript};
 use Nette\Routing\Router;
 
 class CornetteRouter implements Router {
-	private RouterService $routerService;
+	/** @var RouterService */
+	private $routerService;
 	
 	public function __construct(RouterService $routerService) {
 		$this->routerService = $routerService;

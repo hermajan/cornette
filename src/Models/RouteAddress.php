@@ -11,44 +11,51 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RouteAddress {
 	/**
+	 * @var int
 	 * @ORM\Column(name="id", type="integer", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
-	private int $id;
+	private $id;
 	
 	/**
+	 * @var Route
 	 * @ORM\ManyToOne(targetEntity="Route", inversedBy="addresses", cascade={"persist"}, fetch="EAGER")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="route_id", referencedColumnName="id")
 	 * })
 	 */
-	private Route $route;
+	private $route;
 	
 	/**
+	 * @var string
 	 * @ORM\Column(name="locale", type="string", length=10, nullable=false)
 	 */
-	private string $locale;
+	private $locale;
 	
 	/**
+	 * @var string
 	 * @ORM\Column(name="slug", type="string", length=191, nullable=false)
 	 */
-	private string $slug;
+	private $slug;
 	
 	/**
+	 * @var array|null
 	 * @ORM\Column(name="parameters", type="json", nullable=true)
 	 */
-	private ?array $parameters;
+	private $parameters;
 	
 	/**
+	 * @var bool
 	 * @ORM\Column(name="indexed", type="boolean", nullable=false, options={"default"="1"})
 	 */
-	private bool $indexed = true;
+	private $indexed = true;
 	
 	/**
+	 * @var \DateTime
 	 * @ORM\Column(name="added", type="datetime", nullable=false)
 	 */
-	private \DateTime $added;
+	private $added;
 	
 	public function __construct() {
 		$this->added = new \DateTime();
