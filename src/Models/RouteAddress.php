@@ -22,7 +22,7 @@ class RouteAddress {
 	 * @var Route
 	 * @ORM\ManyToOne(targetEntity="Route", inversedBy="addresses", cascade={"persist"}, fetch="EAGER")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="route_id", referencedColumnName="id")
+	 *   @ORM\JoinColumn(name="route_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
 	 * })
 	 */
 	private $route;
