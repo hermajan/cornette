@@ -29,13 +29,13 @@ class RouteAddress {
 	
 	/**
 	 * @var string
-	 * @ORM\Column(name="locale", type="string", length=10, nullable=false)
+	 * @ORM\Column(name="locale", type="string", length=2, nullable=false, options={"fixed"=true})
 	 */
 	private $locale;
 	
 	/**
 	 * @var string
-	 * @ORM\Column(name="slug", type="string", length=191, nullable=false)
+	 * @ORM\Column(name="slug", type="string", length=255, nullable=false)
 	 */
 	private $slug;
 	

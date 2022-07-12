@@ -1,4 +1,5 @@
 <?php
+
 namespace Cornette\Routers;
 
 use Cornette\Models\RouteAddress;
@@ -35,13 +36,11 @@ class CornetteRouter implements Router {
 	function match(IRequest $httpRequest): ?array {
 		$presenter = null;
 		$parameters = $httpRequest->getQuery();
-//		Debugger::barDump($parameters);
 		
 		$slug = rtrim($httpRequest->getUrl()->getPathInfo(), "/_");
 		if($slug) {
 			/** @var RouteAddress|null $routeAddress */
 			$routeAddress = $this->routerService->routeFacade->getBySlug($slug, null, $parameters);
-//			Debugger::barDump($routeAddress);
 			if($routeAddress) {
 				if($routeAddress->getParameters()) {
 					$parameters += $routeAddress->getParameters();

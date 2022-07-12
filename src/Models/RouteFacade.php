@@ -4,7 +4,6 @@ namespace Cornette\Models;
 
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\{Decorator\EntityManagerDecorator, EntityRepository, NonUniqueResultException, NoResultException};
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
@@ -49,9 +48,9 @@ class RouteFacade {
 		}
 		
 		unset($parameters["presenter"], $parameters["action"]);
-		if(!empty($parameters)) {
-			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
-		}
+//		if(!empty($parameters)) {
+//			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
+//		}
 		
 		try {
 			return $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
@@ -113,9 +112,9 @@ class RouteFacade {
 			$queryBuilder->andWhere("ra.locale=:locale")->setParameter("locale", $locale);
 		}
 		
-		if(!empty($parameters)) {
-			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", $parameters, Types::JSON);
-		}
+//		if(!empty($parameters)) {
+//			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", $parameters, Types::JSON);
+//		}
 		
 		try {
 			return $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
