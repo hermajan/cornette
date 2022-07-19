@@ -49,7 +49,7 @@ class RouteFacade {
 		
 		unset($parameters["presenter"], $parameters["action"]);
 //		if(!empty($parameters)) {
-//			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
+//			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", Json::encode($parameters), Types::JSON);
 //		}
 		
 		try {
