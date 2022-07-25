@@ -4,7 +4,6 @@ namespace Cornette\Models;
 
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\{Decorator\EntityManagerDecorator, EntityRepository, NonUniqueResultException, NoResultException};
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
@@ -48,10 +47,15 @@ class RouteFacade {
 			unset($parameters["locale"]);
 		}
 		
-		unset($parameters["presenter"], $parameters["action"]);
-		if(!empty($parameters)) {
-			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
+		if(isset($parameters["id"])) {
+			$queryBuilder->andWhere("ra.item=:item")->setParameter("item", $parameters["id"]);
+			unset($parameters["id"]);
 		}
+		
+		unset($parameters["presenter"], $parameters["action"]);
+//		if(!empty($parameters)) {
+//			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", array_map("strval", $parameters), Types::JSON);
+//		}
 		
 		try {
 			return $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
@@ -71,6 +75,7 @@ class RouteFacade {
 			$locale = $parameters["locale"];
 			unset($parameters["locale"]);
 		}
+		
 		unset($parameters["presenter"], $parameters["action"]);
 		
 		/** @var RouteAddress|null $routeAddress */
@@ -83,6 +88,12 @@ class RouteFacade {
 				$route->setPresenter($presenter)->setAction($action);
 			}
 			
+			$item = null;
+			if(isset($parameters["id"])) {
+				$item = $parameters["id"];
+				unset($parameters["id"]);
+			}
+			
 			if(empty($parameters)) {
 				$parameters = null;
 			}
@@ -91,6 +102,7 @@ class RouteFacade {
 			$routeAddress->setRoute($route)
 				->setLocale($locale)
 				->setSlug($slug)
+				->setItem($item)
 				->setParameters($parameters)
 				->setAdded(new \DateTime());
 			
@@ -111,6 +123,15 @@ class RouteFacade {
 		
 		if(!empty($locale)) {
 			$queryBuilder->andWhere("ra.locale=:locale")->setParameter("locale", $locale);
+		}
+		
+		$item = null;
+		if(isset($parameters["id"])) {
+			$item = $parameters["id"];
+			unset($parameters["id"]);
+		}
+		if(!empty($item)) {
+			$queryBuilder->andWhere("ra.item=:item")->setParameter("item", $item);
 		}
 
 //		if(!empty($parameters)) {

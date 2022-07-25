@@ -1,4 +1,5 @@
 <?php
+
 namespace Cornette\Models;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -38,6 +39,13 @@ class RouteAddress {
 	 * @ORM\Column(name="slug", type="string", length=255, nullable=false)
 	 */
 	private $slug;
+	
+	/**
+	 * Identification of some item, which will be routed. Typically, used by GET parameter "id".
+	 * @var string|null
+	 * @ORM\Column(name="item", type="string", length=255, nullable=true)
+	 */
+	private $item;
 	
 	/**
 	 * @var array|null
@@ -80,6 +88,15 @@ class RouteAddress {
 	
 	public function setSlug(string $slug): RouteAddress {
 		$this->slug = $slug;
+		return $this;
+	}
+	
+	public function getItem(): ?string {
+		return $this->item;
+	}
+	
+	public function setItem(?string $item): RouteAddress {
+		$this->item = $item;
 		return $this;
 	}
 	

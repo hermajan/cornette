@@ -47,6 +47,7 @@ class CornetteRouter implements Router {
 				}
 				$parameters["action"] = $routeAddress->getRoute()->getAction();
 				$parameters["locale"] = $routeAddress->getLocale();
+				$parameters["id"] = $routeAddress->getItem();
 				
 				$presenter = $routeAddress->getRoute()->getPresenter();
 				$this->routerService->translator->setLocale($routeAddress->getLocale());
