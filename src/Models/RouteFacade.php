@@ -50,6 +50,8 @@ class RouteFacade {
 		if(isset($parameters["id"])) {
 			$queryBuilder->andWhere("ra.item=:item")->setParameter("item", $parameters["id"]);
 			unset($parameters["id"]);
+		} else {
+			$queryBuilder->andWhere("ra.item is null");
 		}
 		
 		unset($parameters["presenter"], $parameters["action"]);
