@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class RouteAddress {
+	use Arrayable;
+	
 	/**
 	 * @var int
 	 * @ORM\Column(name="id", type="integer", nullable=false)
