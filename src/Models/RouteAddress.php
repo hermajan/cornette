@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * RouteAddress
  *
- * @ORM\Table(name="`route_addresses`", uniqueConstraints={@ORM\UniqueConstraint(name="locale_slug", columns={"locale", "slug"})}, indexes={@ORM\Index(name="route_id", columns={"route_id"})})
+ * @ORM\Table(name="`route_addresses`",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="locale_slug", columns={"locale", "slug"})},
+ *     indexes={@ORM\Index(name="route_id", columns={"route_id"}), @ORM\Index(name="slug", columns={"slug"})}
+ *	)
  * @ORM\Entity
  */
 class RouteAddress {

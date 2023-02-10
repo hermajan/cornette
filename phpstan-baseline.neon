@@ -1,6 +1,6 @@
 parameters:
-	ignoreErrors:
-		-
-			message: "#^Property Cornette\\\\Models\\\\RouteAddress\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Models/RouteAddress.php
+#	ignoreErrors:
+#		-
+#			message: "#^Property Cornette\\\\Models\\\\RouteAddress\\:\\:\\$id is never written, only read\\.$#"
+#			count: 1
+#			path: src/Models/RouteAddress.php
