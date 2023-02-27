@@ -71,7 +71,7 @@ class RouteFacade {
 			throw new InvalidArgumentException("Presenter must have name!");
 		}
 		
-		$slug = Strings::webalize($slug, "/");
+		$slug = Strings::webalize(str_replace([",", "."], "", $slug), "/_");
 		
 		if(isset($parameters["locale"])) {
 			$locale = $parameters["locale"];
