@@ -5,6 +5,7 @@ namespace Cornette\Models;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\{Decorator\EntityManagerDecorator, EntityRepository, NonUniqueResultException, NoResultException};
+use Nette\Caching\{Cache, Storage};
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 
@@ -18,10 +19,14 @@ class RouteFacade {
 	/** @var EntityRepository<RouteAddress> */
 	protected $repositoryAddress;
 	
-	public function __construct(EntityManagerDecorator $entityManager) {
+	/** @var Cache */
+	protected $cache;
+	
+	public function __construct(EntityManagerDecorator $entityManager, Storage $storage) {
 		$this->entityManager = $entityManager;
 		$this->repository = $entityManager->getRepository(Route::class);
 		$this->repositoryAddress = $entityManager->getRepository(RouteAddress::class);
+		$this->cache = new Cache($storage, "cornette-routeFacade");
 	}
 	
 	public function getParametersKey(): string {
@@ -120,31 +125,40 @@ class RouteFacade {
 	}
 	
 	public function getBySlug(string $slug, ?string $locale = null, ?array $parameters = null): ?RouteAddress {
-		$queryBuilder = $this->repositoryAddress->createQueryBuilder("ra")
-			->where("ra.slug=:slug")->setParameter("slug", $slug);
-		
-		if(!empty($locale)) {
-			$queryBuilder->andWhere("ra.locale=:locale")->setParameter("locale", $locale);
-		}
-		
-		$item = null;
-		if(isset($parameters["id"])) {
-			$item = $parameters["id"];
-			unset($parameters["id"]);
-		}
-		if(!empty($item)) {
-			$queryBuilder->andWhere("ra.item=:item")->setParameter("item", $item);
-		}
+		// caching currently not working because of type hints in RouteAddress entity
+//		$key = "slug~".$locale."~".$slug;
+//		$data = $this->cache->load($key);
+//		if($data === null) {
+			$queryBuilder = $this->repositoryAddress->createQueryBuilder("ra")
+				->where("ra.slug=:slug")->setParameter("slug", $slug);
+			
+			if(!empty($locale)) {
+				$queryBuilder->andWhere("ra.locale=:locale")->setParameter("locale", $locale);
+			}
+			
+			$item = null;
+			if(isset($parameters["id"])) {
+				$item = $parameters["id"];
+				unset($parameters["id"]);
+			}
+			if(!empty($item)) {
+				$queryBuilder->andWhere("ra.item=:item")->setParameter("item", $item);
+			}
 
 //		if(!empty($parameters)) {
 //			$queryBuilder->andWhere("ra.parameters = ".$this->getParametersKey())->setParameter("parameters", $parameters, Types::JSON);
 //		}
+			
+			try {
+				/** @var RouteAddress $data */
+				$data = $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
+//				$this->cache->save($key, $data, [Cache::TAGS => ["routeAddress/".$data->getId()]]);
+			} catch(NoResultException|NonUniqueResultException $e) {
+				$data = null;
+			}
+//		}
 		
-		try {
-			return $queryBuilder->setMaxResults(1)->getQuery()->getSingleResult();
-		} catch(NoResultException|NonUniqueResultException $e) {
-			return null;
-		}
+		return $data;
 	}
 	
 	/**
