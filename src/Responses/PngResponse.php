@@ -3,7 +3,6 @@
 namespace Cornette\Responses;
 
 use Nette\Application\Response;
-use Nette\Application\UI\Template;
 use Nette\Http\{IRequest as IHttpRequest, IResponse as IHttpResponse};
 
 class PngResponse implements Response {
@@ -20,11 +19,6 @@ class PngResponse implements Response {
 	
 	public function send(IHttpRequest $httpRequest, IHttpResponse $httpResponse): void {
 		$httpResponse->setContentType("image/png", "utf-8");
-		
-		if($this->source instanceof Template) {
-			$this->source->render();
-		} else {
-			echo $this->source;
-		}
+		echo $this->source;
 	}
 }

@@ -7,14 +7,20 @@ use Nette\Application\UI\Template;
 use Nette\Http\{IRequest as IHttpRequest, IResponse as IHttpResponse};
 
 class SvgResponse implements Response {
-	/** @var string */
+	/** @var Template|string */
 	private $source;
 	
-	public function __construct(string $source) {
+	/**
+	 * @param Template|string $source
+	 */
+	public function __construct($source) {
 		$this->source = $source;
 	}
 	
-	public function getSource(): string {
+	/**
+	 * @return Template|string
+	 */
+	public function getSource() {
 		return $this->source;
 	}
 	
